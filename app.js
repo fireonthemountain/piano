@@ -6,11 +6,12 @@
   const velOut = document.querySelector('#velOut');
   const sustainBtn = document.querySelector('#sustain');
   const fullscreenBtn = document.querySelector('#fullscreen');
+  const toneSelect = document.querySelector('#tone');
   const status = document.querySelector('#status');
   const about = document.querySelector('#about');
 
-  const START = 48;
-  const END = 83;
+  const START = 60; // C4
+  const END = 88;   // E6
   const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
   const WHITE_PC = new Set([0,2,4,5,7,9,11]);
   const BASE = 'https://raw.githubusercontent.com/sfzinstruments/SalamanderGrandPiano/master/Samples/';
@@ -20,7 +21,16 @@
   const pointers = new Map();
   let audio = null;
   let master = null;
+  let toneFilter = null;
+  let toneShelf = null;
   let sustain = false;
+
+  const TONES = {
+    concert: {name:'Concert', cutoff:18000, shelf:0, volume:.86},
+    warm:    {name:'Warm', cutoff:7000, shelf:-2.5, volume:.9},
+    bright:  {name:'Bright', cutoff:20000, shelf:4.5, volume:.8},
+    mellow:  {name:'Mellow', cutoff:3800, shelf:-4.5, volume:.95}
+  };
 
   function noteName(midi){
     const pc = midi % 12;
@@ -51,12 +61,28 @@
     return BASE + encodeURIComponent(file).replace(/%2F/g,'/');
   }
 
+  function applyTone(){
+    const preset = TONES[toneSelect?.value || 'concert'] || TONES.concert;
+    if(toneFilter){
+      toneFilter.frequency.setTargetAtTime(preset.cutoff, audio.currentTime, .025);
+      toneShelf.gain.setTargetAtTime(preset.shelf, audio.currentTime, .025);
+      master.gain.setTargetAtTime(preset.volume, audio.currentTime, .025);
+    }
+    status.textContent = `${preset.name} · Salamander Grand`;
+  }
+
   async function ensureAudio(){
     if(!audio){
       audio = new (window.AudioContext || window.webkitAudioContext)({latencyHint:'interactive'});
       master = audio.createGain();
-      master.gain.value = 0.86;
-      master.connect(audio.destination);
+      toneFilter = audio.createBiquadFilter();
+      toneShelf = audio.createBiquadFilter();
+      toneFilter.type = 'lowpass';
+      toneFilter.Q.value = .45;
+      toneShelf.type = 'highshelf';
+      toneShelf.frequency.value = 3200;
+      toneFilter.connect(toneShelf).connect(master).connect(audio.destination);
+      applyTone();
     }
     if(audio.state === 'suspended') await audio.resume();
   }
@@ -70,7 +96,7 @@
       if(!res.ok) throw new Error(`Sample ${res.status}`);
       const arr = await res.arrayBuffer();
       const decoded = await audio.decodeAudioData(arr.slice(0));
-      status.textContent = 'Salamander Grand Piano';
+      applyTone();
       return decoded;
     })().catch(err=>{buffers.delete(key); throw err;});
     buffers.set(key,p);
@@ -84,7 +110,7 @@
     gain.gain.setValueAtTime(0.0001, now);
     gain.gain.exponentialRampToValueAtTime(Math.max(.015, (v/127)*.18), now+.008);
     gain.gain.exponentialRampToValueAtTime(.0001, now+1.8);
-    gain.connect(master);
+    gain.connect(toneFilter);
     const o1=audio.createOscillator(), o2=audio.createOscillator();
     o1.type='triangle'; o2.type='sine'; o1.frequency.value=freq; o2.frequency.value=freq*2.002;
     const g2=audio.createGain(); g2.gain.value=.2; o2.connect(g2).connect(gain); o1.connect(gain);
@@ -105,7 +131,7 @@
       src.buffer=buffer;
       src.playbackRate.value=Math.pow(2,(midi-center)/12);
       gain.gain.value=0.42 + (vel/127)*0.58;
-      src.connect(gain).connect(master);
+      src.connect(gain).connect(toneFilter);
       src.start();
       active.set(midi,{sources:[src],gain,fallback:false});
     }catch(e){
@@ -142,6 +168,7 @@
   }
 
   function buildKeyboard(){
+    piano.innerHTML='';
     const whites=[];
     for(let m=START;m<=END;m++) if(WHITE_PC.has(m%12)) whites.push(m);
     const whiteW=100/whites.length;
@@ -193,6 +220,7 @@
 
   labels.addEventListener('change',()=>piano.classList.toggle('show-labels',labels.checked));
   velocity.addEventListener('input',()=>velOut.value=velocity.value);
+  toneSelect.addEventListener('change',()=>{ if(audio) applyTone(); else status.textContent=`${TONES[toneSelect.value].name} selected`; });
   sustainBtn.addEventListener('click',()=>setSustain(!sustain));
   fullscreenBtn.addEventListener('click',async()=>{
     try{if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen();}
