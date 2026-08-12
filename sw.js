@@ -1,4 +1,4 @@
-const SHELL='grand-piano-v2';
+const SHELL='grand-piano-v3';
 const FILES=['./','./index.html','./styles.css','./app.js','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(SHELL).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(
