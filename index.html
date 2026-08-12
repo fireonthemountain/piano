@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Grand Piano" />
+  <meta name="theme-color" content="#111111" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Grand Piano</title>
+</head>
+<body>
+  <main id="app">
+    <header class="toolbar">
+      <div class="brand">Grand Piano</div>
+      <div id="status" class="status">Tap a key to start</div>
+      <div class="controls">
+        <label class="switch"><input id="labels" type="checkbox"><span>Names</span></label>
+        <label class="velocity">Touch <input id="velocity" type="range" min="1" max="127" value="88"><output id="velOut">88</output></label>
+        <button id="sustain" type="button" aria-pressed="false">Sustain</button>
+        <button id="fullscreen" type="button">Full screen</button>
+        <button id="info" type="button" aria-label="About">ⓘ</button>
+      </div>
+    </header>
+
+    <section id="pianoWrap" class="piano-wrap" aria-label="Three octave virtual piano">
+      <div id="piano" class="piano"></div>
+    </section>
+
+    <footer class="hint">Landscape works best · Multi-touch enabled · Samples cache as you play</footer>
+  </main>
+
+  <dialog id="about">
+    <button id="closeAbout" class="close" aria-label="Close">×</button>
+    <h2>Grand Piano</h2>
+    <p>A clean-room iPad-first virtual piano inspired by the interaction of MuseScore's browser piano.</p>
+    <p><strong>Sound:</strong> Salamander Grand Piano by Alexander Holm, Yamaha C5 recordings, licensed CC BY 3.0. Samples are loaded from the public sfzinstruments repository and cached locally by the app.</p>
+    <p>This app does not include or copy MuseScore code or proprietary assets.</p>
+    <p class="small">Add this page to the iPad Home Screen from Safari for standalone full-screen use.</p>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
