@@ -18,6 +18,14 @@
       <div class="brand">Grand Piano</div>
       <div id="status" class="status">Tap a key to start</div>
       <div class="controls">
+        <label class="tone-control">Sound
+          <select id="tone" aria-label="Piano sound">
+            <option value="concert">Concert</option>
+            <option value="warm">Warm</option>
+            <option value="bright">Bright</option>
+            <option value="mellow">Mellow</option>
+          </select>
+        </label>
         <label class="switch"><input id="labels" type="checkbox"><span>Names</span></label>
         <label class="velocity">Touch <input id="velocity" type="range" min="1" max="127" value="88"><output id="velOut">88</output></label>
         <button id="sustain" type="button" aria-pressed="false">Sustain</button>
@@ -26,18 +34,18 @@
       </div>
     </header>
 
-    <section id="pianoWrap" class="piano-wrap" aria-label="Three octave virtual piano">
+    <section id="pianoWrap" class="piano-wrap" aria-label="Two octave virtual piano from C4 through E6">
       <div id="piano" class="piano"></div>
     </section>
 
-    <footer class="hint">Landscape works best · Multi-touch enabled · Samples cache as you play</footer>
+    <footer class="hint">C4–E6 · Landscape works best · Multi-touch enabled · Samples cache as you play</footer>
   </main>
 
   <dialog id="about">
     <button id="closeAbout" class="close" aria-label="Close">×</button>
     <h2>Grand Piano</h2>
-    <p>A clean-room iPad-first virtual piano inspired by the interaction of MuseScore's browser piano.</p>
-    <p><strong>Sound:</strong> Salamander Grand Piano by Alexander Holm, Yamaha C5 recordings, licensed CC BY 3.0. Samples are loaded from the public sfzinstruments repository and cached locally by the app.</p>
+    <p>An iPad-first virtual piano with a compact C4–E6 playing range.</p>
+    <p><strong>Sound source:</strong> Salamander Grand Piano by Alexander Holm, Yamaha C5 recordings, licensed CC BY 3.0. Concert, Warm, Bright, and Mellow are real-time tonal presets applied to those samples.</p>
     <p>This app does not include or copy MuseScore code or proprietary assets.</p>
     <p class="small">Add this page to the iPad Home Screen from Safari for standalone full-screen use.</p>
   </dialog>
