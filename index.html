@@ -18,34 +18,51 @@
       <div class="brand">Grand Piano</div>
       <div id="status" class="status">Tap a key to start</div>
       <div class="controls">
-        <label class="tone-control">Sound
-          <select id="tone" aria-label="Piano sound">
+        <label class="switch compact"><input id="labels" type="checkbox"><span>Names</span></label>
+        <label class="compact sound-select">Sound
+          <select id="tone">
             <option value="concert">Concert</option>
             <option value="warm">Warm</option>
             <option value="bright">Bright</option>
             <option value="mellow">Mellow</option>
           </select>
         </label>
-        <label class="switch"><input id="labels" type="checkbox"><span>Names</span></label>
-        <label class="velocity">Touch <input id="velocity" type="range" min="1" max="127" value="88"><output id="velOut">88</output></label>
+        <label class="compact sound-select">Room
+          <select id="room">
+            <option value="dry">Dry</option>
+            <option value="studio">Studio</option>
+            <option value="hall">Hall</option>
+          </select>
+        </label>
+        <label class="compact sound-select">Touch
+          <select id="touch">
+            <option value="normal">Normal</option>
+            <option value="soft">Soft</option>
+            <option value="firm">Firm</option>
+          </select>
+        </label>
+        <label class="compact slider slider-mech">Mech <input id="mechanical" type="range" min="0" max="100" value="18"><output id="mechOut">18</output></label>
+        <label class="compact slider slider-res">Res <input id="resonance" type="range" min="0" max="100" value="22"><output id="resOut">22</output></label>
+        <label class="velocity compact">Touch <input id="velocity" type="range" min="1" max="127" value="88"><output id="velOut">88</output></label>
         <button id="sustain" type="button" aria-pressed="false">Sustain</button>
         <button id="fullscreen" type="button">Full screen</button>
         <button id="info" type="button" aria-label="About">ⓘ</button>
       </div>
     </header>
 
-    <section id="pianoWrap" class="piano-wrap" aria-label="Two octave virtual piano from C4 through E6">
+    <section id="pianoWrap" class="piano-wrap" aria-label="Two octave virtual piano with extra notes">
       <div id="piano" class="piano"></div>
     </section>
 
-    <footer class="hint">C4–E6 · Landscape works best · Multi-touch enabled · Samples cache as you play</footer>
+    <footer class="hint">C4–E6 · 16 velocity layers · Multi-touch · Better touch response</footer>
   </main>
 
   <dialog id="about">
     <button id="closeAbout" class="close" aria-label="Close">×</button>
     <h2>Grand Piano</h2>
-    <p>An iPad-first virtual piano with a compact C4–E6 playing range.</p>
-    <p><strong>Sound source:</strong> Salamander Grand Piano by Alexander Holm, Yamaha C5 recordings, licensed CC BY 3.0. Concert, Warm, Bright, and Mellow are real-time tonal presets applied to those samples.</p>
+    <p>A clean-room iPad-first virtual piano inspired by the interaction of MuseScore's browser piano.</p>
+    <p><strong>Sound:</strong> Salamander Grand Piano by Alexander Holm, Yamaha C5 recordings, licensed CC BY 3.0. Samples are loaded from the public sfzinstruments repository and cached locally by the app.</p>
+    <p>This version adds full 16-layer velocity mapping, room options, touch curves, preload, and subtle mechanical / resonance enhancement.</p>
     <p>This app does not include or copy MuseScore code or proprietary assets.</p>
     <p class="small">Add this page to the iPad Home Screen from Safari for standalone full-screen use.</p>
   </dialog>
